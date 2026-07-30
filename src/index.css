@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --bg-color: #030712; /* gray-950 */
+  --text-primary: #f9fafb; /* gray-50 */
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-bg: rgba(17, 24, 39, 0.4); /* dark but slightly transparent */
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+@layer utilities {
+  .text-gradient-omic {
+    background-image: linear-gradient(90deg, #7c3aed 0%, #d946ef 45%, #ec4899 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)];
+  }
+  
+  .glass-panel {
+    @apply bg-black/40 backdrop-blur-2xl border border-white/10;
+  }
+}
+
+/* ---- Card interactions ---- */
+
+@keyframes borderGlowMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+.animate-borderGlow {
+  animation: borderGlowMove 3s linear infinite;
+}
+
+@keyframes btnShine {
+  0% {
+    transform: translateX(-130%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(230%) skewX(-20deg);
+  }
+}
+
+@keyframes suiteFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+.animate-suiteFloat {
+  animation: suiteFloat 7s ease-in-out infinite;
+}

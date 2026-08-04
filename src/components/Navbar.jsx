@@ -2,8 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ChevronDown, ArrowRight } from 'lucide-react';
+import { navigate, routeLinkProps } from '../router.jsx';
 
 gsap.registerPlugin(ScrollTrigger);
+
+/* Submenu entries are plain strings unless they resolve to a real page,
+   in which case they carry an `href` that the router picks up. */
+const subLabel = (sub) => (typeof sub === 'string' ? sub : sub.label);
+const subHref = (sub) => (typeof sub === 'string' ? null : sub.href);
 
 const NAV_ITEMS = [
   { label: 'Home', href: '#' },
@@ -20,7 +26,7 @@ const NAV_ITEMS = [
   {
     label: 'Solutions',
     items: [
-      'Breast Cancer',
+      { label: 'Breast Cancer', href: '/solutions/breast-cancer' },
       'Lung Cancer',
       'Precision Oncology',
       'Biomarker Discovery',
@@ -40,7 +46,13 @@ const NAV_ITEMS = [
   },
   {
     label: 'Company',
-    items: ['About OmicMind', 'Research', 'Publications', 'Careers', 'Partners'],
+    items: [
+      'About OmicMind',
+      { label: 'Research', href: '/research' },
+      'Publications',
+      'Careers',
+      'Partners',
+    ],
   },
   { label: 'Contact', href: '#' },
 ];
@@ -362,6 +374,11 @@ export default function Navbar() {
     e.preventDefault();
     setOpenIndex(null);
     setMobileOpen(false);
+    // On a sub-page the logo/Home link has to route back, not just scroll.
+    if (window.location.pathname !== '/') {
+      navigate('/');
+      return;
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -437,21 +454,30 @@ export default function Navbar() {
                         <div className="relative min-w-[16rem] overflow-hidden rounded-2xl border border-slate-200/80 bg-white/95 p-2 shadow-[0_24px_60px_-18px_rgba(15,23,42,0.28)] backdrop-blur-2xl">
                           <span className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-fuchsia-400/50 to-transparent" />
                           <ul className="relative">
-                            {item.items.map((sub) => (
-                              <li key={sub}>
-                                <a
-                                  href="#"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    setOpenIndex(null);
-                                  }}
-                                  className="dd-link group flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 font-sans text-[0.85rem] font-medium text-slate-600 transition-colors duration-200 hover:bg-slate-50 hover:text-slate-900"
-                                >
-                                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-slate-200 transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-purple-500 group-hover:to-pink-500 group-hover:shadow-[0_0_8px_rgba(192,38,211,0.55)]" />
-                                  <span className="whitespace-nowrap">{sub}</span>
-                                </a>
-                              </li>
-                            ))}
+                            {item.items.map((sub) => {
+                              const label = subLabel(sub);
+                              const href = subHref(sub);
+                              const linkProps = href
+                                ? routeLinkProps(href, () => setOpenIndex(null))
+                                : {
+                                    href: '#',
+                                    onClick: (e) => {
+                                      e.preventDefault();
+                                      setOpenIndex(null);
+                                    },
+                                  };
+                              return (
+                                <li key={label}>
+                                  <a
+                                    {...linkProps}
+                                    className="dd-link group flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 font-sans text-[0.85rem] font-medium text-slate-600 transition-colors duration-200 hover:bg-slate-50 hover:text-slate-900"
+                                  >
+                                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-slate-200 transition-all duration-300 group-hover:bg-gradient-to-r group-hover:from-purple-500 group-hover:to-pink-500 group-hover:shadow-[0_0_8px_rgba(192,38,211,0.55)]" />
+                                    <span className="whitespace-nowrap">{label}</span>
+                                  </a>
+                                </li>
+                              );
+                            })}
                           </ul>
                         </div>
                       </div>
@@ -522,21 +548,30 @@ export default function Navbar() {
                           style={{ height: 0, opacity: 0 }}
                         >
                           <ul className="mb-3 ml-1 space-y-0.5 border-l border-slate-100 pl-4">
-                            {item.items.map((sub) => (
-                              <li key={sub}>
-                                <a
-                                  href="#"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    setMobileOpen(false);
-                                  }}
-                                  className="flex items-center gap-2.5 rounded-lg px-1 py-2.5 font-sans text-[0.9375rem] text-slate-600 active:text-slate-900"
-                                >
-                                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gradient-to-r from-purple-500 to-pink-500" />
-                                  {sub}
-                                </a>
-                              </li>
-                            ))}
+                            {item.items.map((sub) => {
+                              const label = subLabel(sub);
+                              const href = subHref(sub);
+                              const linkProps = href
+                                ? routeLinkProps(href, () => setMobileOpen(false))
+                                : {
+                                    href: '#',
+                                    onClick: (e) => {
+                                      e.preventDefault();
+                                      setMobileOpen(false);
+                                    },
+                                  };
+                              return (
+                                <li key={label}>
+                                  <a
+                                    {...linkProps}
+                                    className="flex items-center gap-2.5 rounded-lg px-1 py-2.5 font-sans text-[0.9375rem] text-slate-600 active:text-slate-900"
+                                  >
+                                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gradient-to-r from-purple-500 to-pink-500" />
+                                    {label}
+                                  </a>
+                                </li>
+                              );
+                            })}
                           </ul>
                         </div>
                       </>

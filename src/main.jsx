@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import Research from './pages/Research.jsx'
 import BreastCancer from './pages/BreastCancer.jsx'
+import LungCancer from './pages/LungCancer.jsx'
+import IhcAnalysis from './pages/IhcAnalysis.jsx'
 import { usePathname } from './router.jsx'
 import './index.css'
 
@@ -17,6 +19,8 @@ function Root() {
 
   if (route === '/research') return <Research />
   if (route === '/solutions/breast-cancer') return <BreastCancer />
+  if (route === '/solutions/lung-cancer') return <LungCancer />
+  if (route === '/applications/ihc-analysis') return <IhcAnalysis />
   return <App />
 }
 

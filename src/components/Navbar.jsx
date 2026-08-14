@@ -27,7 +27,7 @@ const NAV_ITEMS = [
     label: 'Solutions',
     items: [
       { label: 'Breast Cancer', href: '/solutions/breast-cancer' },
-      'Lung Cancer',
+      { label: 'Lung Cancer', href: '/solutions/lung-cancer' },
       'Precision Oncology',
       'Biomarker Discovery',
       'Clinical Research',
@@ -37,7 +37,7 @@ const NAV_ITEMS = [
     label: 'Applications',
     items: [
       'Histopathology',
-      'IHC Analysis',
+      { label: 'IHC Analysis', href: '/applications/ihc-analysis' },
       'Genomics',
       'Transcriptomics',
       'Spatial Biology',

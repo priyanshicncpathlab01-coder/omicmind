@@ -1,60 +1,16 @@
-import React, { useRef, useMemo, Suspense } from 'react';
+import React, { useRef, Suspense } from 'react';
 import { motion } from 'framer-motion';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, Stars, Sphere } from '@react-three/drei';
-import * as THREE from 'three';
-import timelineVideo from '../assets/Timeline.mp4';
+import { Canvas } from '@react-three/fiber';
+import { Stars } from '@react-three/drei';
+// Filename case matters: the asset ships as `Histopathology.mp4`, and a
+// lowercase import resolves on Windows but breaks a Linux build.
+import histopathologyVideo from '../assets/Histopathology.mp4';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import MagneticButton from './MagneticButton';
 
 gsap.registerPlugin(ScrollTrigger);
-
-// 3D DNA-like floating particles
-function FloatingMolecules() {
-  const group = useRef();
-  
-  const particles = useMemo(() => {
-    const temp = [];
-    for (let i = 0; i < 40; i++) {
-      const t = i / 40;
-      const x = Math.sin(t * Math.PI * 4) * 2;
-      const y = (t - 0.5) * 8;
-      const z = Math.cos(t * Math.PI * 4) * 2;
-      temp.push({ position: [x, y, z], scale: Math.random() * 0.15 + 0.05 });
-      
-      const x2 = Math.sin(t * Math.PI * 4 + Math.PI) * 2;
-      const z2 = Math.cos(t * Math.PI * 4 + Math.PI) * 2;
-      temp.push({ position: [x2, y, z2], scale: Math.random() * 0.15 + 0.05 });
-    }
-    return temp;
-  }, []);
-
-  useFrame((state) => {
-    const t = state.clock.getElapsedTime();
-    if (group.current) {
-      group.current.rotation.y = t * 0.2;
-      group.current.position.y = Math.sin(t * 0.5) * 0.5;
-    }
-  });
-
-  return (
-    <group ref={group}>
-      {particles.map((data, i) => (
-        <Sphere key={i} position={data.position} scale={data.scale}>
-          <meshStandardMaterial 
-            color={i % 2 === 0 ? "#a855f7" : "#ec4899"} 
-            emissive={i % 2 === 0 ? "#7c3aed" : "#ec4899"}
-            emissiveIntensity={0.8}
-            roughness={0.2}
-            metalness={0.8}
-          />
-        </Sphere>
-      ))}
-    </group>
-  );
-}
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -232,12 +188,13 @@ export default function Hero() {
       {/* Background Video (Full visibility) */}
       <video 
         ref={videoRef}
-        src={timelineVideo} 
-        autoPlay 
-        loop 
-        muted 
-        playsInline 
-        className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
+        src={histopathologyVideo}
+        autoPlay
+        loop
+        muted
+        playsInline
+        controls={false}
+        className="absolute inset-0 w-full h-full object-cover object-center z-0 pointer-events-none"
         style={{ transformOrigin: "center center" }}
       />
       
@@ -257,11 +214,6 @@ export default function Hero() {
             <ambientLight intensity={0.5} />
             <directionalLight position={[10, 10, 5]} intensity={1} />
             <Stars radius={50} depth={50} count={2000} factor={4} saturation={1} fade speed={1} />
-            <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
-              <group position={[4, 0, 0]}>
-                <FloatingMolecules />
-              </group>
-            </Float>
           </Canvas>
         </Suspense>
       </div>

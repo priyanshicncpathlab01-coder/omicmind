@@ -473,6 +473,7 @@ function Lighting({ variant = 'a' }) {
     <div
       className="pointer-events-none absolute inset-0"
       style={{ backgroundImage: images[variant] }}
+      data-parallax="bg"
       aria-hidden="true"
     />
   );
@@ -778,6 +779,8 @@ export default function IhcAnalysis() {
           const to = (target, prop, duration = 0.9) =>
             gsap.quickTo(target, prop, { duration, ease: 'power3.out' });
 
+          const bgVidX = to('.hero-video-frame', 'x', 1.6);
+          const bgVidY = to('.hero-video-frame', 'y', 1.6);
           const vidX = to('.hero-video-layer', 'x');
           const vidY = to('.hero-video-layer', 'y');
           const vidRX = to('.hero-video-layer', 'rotationX', 1.1);
@@ -794,6 +797,11 @@ export default function IhcAnalysis() {
             const px = (e.clientX - r.left) / r.width - 0.5;
             const py = (e.clientY - r.top) / r.height - 0.5;
 
+            /* Full-bleed footage: the deepest layer, so it answers the
+               pointer last and least — a few pixels, opposite the cursor. */
+            bgVidX(-px * 10 * k);
+            bgVidY(-py * 8 * k);
+
             /* Video: ~8px of travel and a 4–5° tilt at the extremes */
             vidX(px * 16 * k);
             vidY(py * 12 * k);
@@ -809,6 +817,8 @@ export default function IhcAnalysis() {
           };
 
           const onLeave = () => {
+            bgVidX(0);
+            bgVidY(0);
             vidX(0);
             vidY(0);
             vidRX(0);
@@ -844,6 +854,11 @@ export default function IhcAnalysis() {
           });
 
         /* Each layer leaves at its own rate */
+
+        /* The footage trails the page: a positive yPercent means it drifts
+           down while the document travels up, so it reads as the furthest
+           plane. 8% of its 124% height stays inside the 12% buffer. */
+        scroll('.hero-video-frame', 8);
         scroll('.hero-bg', -12);
         scroll('.hero-copy', -7);
         scroll('.hero-video-layer', 9);
@@ -852,6 +867,88 @@ export default function IhcAnalysis() {
 
       return () => mm.revert();
     }, heroRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  /* ---- Page parallax: depth for everything below the hero ----
+     One scrubbed, transform-only tween per layer. Each element is placed
+     at +travel when it enters the viewport and -travel when it leaves, so
+     it sits exactly where it was designed to while it is mid-screen and
+     the drift reads as depth rather than as displacement.
+
+     Amplitudes are percentages of each element's own height, which is what
+     keeps the effect proportional from 768px to ultrawide. Everything runs
+     through gsap.matchMedia: tablet moves at ~55% of desktop's amplitude,
+     and below 768px — where the layer count costs more than the depth is
+     worth — no trigger is created at all. */
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+
+      mm.add(
+        {
+          desktop: '(min-width: 1024px)',
+          tablet: '(min-width: 768px) and (max-width: 1023px)',
+        },
+        (context) => {
+          const k = context.conditions.desktop ? 1 : 0.55;
+
+          /* `range` is the total travel, split either side of rest.
+             `within` picks the trigger: 'self' for elements that should
+             react to their own pass, or a selector for the ancestor whose
+             journey they belong to. `depth` varies the amount per index,
+             which is what separates the card columns into planes. */
+          const drift = (targets, range, opts = {}) => {
+            const { scrub = 1, within = 'section', depth = () => 1 } = opts;
+
+            gsap.utils.toArray(targets).forEach((el, i) => {
+              const travel = ((range * k) / 2) * depth(i);
+              if (!travel) return;
+
+              gsap.fromTo(
+                el,
+                { yPercent: travel },
+                {
+                  yPercent: -travel,
+                  ease: 'none',
+                  scrollTrigger: {
+                    trigger: within === 'self' ? el : el.closest(within) || el,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub,
+                  },
+                }
+              );
+            });
+          };
+
+          /* Backmost: the section lighting washes drift slowest and with the
+             longest scrub, so they lag the content in front of them. */
+          drift('[data-parallax="bg"]', 8, { scrub: 1.2 });
+          drift('[data-parallax="blob"]', 12, { within: 'article', scrub: 1.2 });
+
+          /* The solutions footage moves against its own frame — the 120%
+             height it carries keeps both edges covered at full travel. */
+          drift('[data-parallax="media"]', 12, { within: 'self', scrub: 0.8 });
+
+          /* Cards: a few pixels each, and less per column across the row, so
+             the grid resolves into four planes instead of one sheet.
+             yPercent only — `y` stays free for the reveal and hover tweens. */
+          drift('[data-hover-card]', 4.5, {
+            within: 'self',
+            scrub: 0.8,
+            depth: (i) => 1 - (i % 4) * 0.18,
+          });
+
+          drift('[data-parallax="panel"]', 3, { within: 'self', scrub: 0.8 });
+        }
+      );
+
+      return () => mm.revert();
+    }, rootRef);
 
     return () => ctx.revert();
   }, []);
@@ -869,6 +966,41 @@ export default function IhcAnalysis() {
           className="relative overflow-hidden bg-white"
           style={{ perspective: '1300px' }}
         >
+          {/* ---------- Layer 0 (backmost) — full-bleed IHC footage ----------
+              Absolutely inset to the section, so the frame follows the hero's
+              own height at every breakpoint. Nothing is blurred or scaled:
+              object-cover/center keeps the footage sharp and undistorted. */}
+          <div
+            className="hero-video-bg pointer-events-none absolute inset-0 z-0 overflow-hidden"
+            aria-hidden="true"
+          >
+            {/* Sized 124% of the hero and pulled up 12%, which is more than
+                the parallax below can ever travel — so no edge is exposed at
+                any scroll position. object-cover keeps the footage
+                undistorted; the buffer is the only thing it costs. */}
+            <video
+              className="hero-video-frame absolute inset-x-0 -top-[12%] h-[124%] w-full object-cover"
+              style={{ objectPosition: 'center' }}
+              src={ihcHeroVideo}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              controls={false}
+              disablePictureInPicture
+            />
+            {/* Very light veil only — enough for the dark hero copy to stay
+                legible, not enough to darken or wash out the footage. */}
+            <span
+              className="absolute inset-0"
+              style={{
+                backgroundImage:
+                  'linear-gradient(to bottom, rgba(255,255,255,0.38) 0%, rgba(255,255,255,0.20) 45%, rgba(255,255,255,0.14) 100%)',
+              }}
+            />
+          </div>
+
           {/* ---------- Layer 1 (back) — drifting violet/pink lighting ---------- */}
           <div className="hero-bg pointer-events-none absolute inset-0" aria-hidden="true">
             <span
@@ -936,36 +1068,15 @@ export default function IhcAnalysis() {
               className="hero-stage relative mx-auto mt-12 max-w-5xl lg:mt-14"
               style={{ transformStyle: 'preserve-3d' }}
             >
-              {/* -- Middle layer — the IHC footage, unchanged and unblurred -- */}
-              <div className="hero-video-layer relative" style={{ transformStyle: 'preserve-3d' }}>
-                <span
-                  className="hero-glow pointer-events-none absolute -inset-5 rounded-[2.9rem] opacity-80 blur-[58px] sm:-inset-7"
-                  style={{
-                    backgroundImage:
-                      'radial-gradient(58% 60% at 28% 18%, rgba(124,58,237,0.30), transparent 70%), radial-gradient(55% 58% at 76% 86%, rgba(236,72,153,0.24), transparent 72%)',
-                  }}
-                  aria-hidden="true"
-                />
-
-                <div className="relative overflow-hidden rounded-[2rem] border border-[#EEE9F9] bg-white shadow-[0_40px_90px_-45px_rgba(76,29,149,0.55)]">
-                  <span
-                    className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[3px] bg-gradient-to-r from-transparent via-[#D946EF]/60 to-transparent"
-                    aria-hidden="true"
-                  />
-
-                  <video
-                    className="block aspect-video h-full w-full object-cover object-center"
-                    src={ihcHeroVideo}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="auto"
-                    controls={false}
-                    disablePictureInPicture
-                  />
-                </div>
-              </div>
+              {/* -- Middle layer — the footage now runs full-bleed behind the
+                   whole hero, so this keeps only the frame it used to occupy:
+                   the stage's proportions, and the anchor the AI elements,
+                   panels and the GSAP parallax are positioned against. -- */}
+              <div
+                className="hero-video-layer relative aspect-video w-full"
+                style={{ transformStyle: 'preserve-3d' }}
+                aria-hidden="true"
+              />
 
               {/* -- Front layer — nodes, dots and markers -- */}
               <div
@@ -1076,7 +1187,8 @@ export default function IhcAnalysis() {
                 breakpoint, however many columns the grid resolves to. */}
             <div className="relative mt-14 overflow-hidden rounded-[2rem] lg:mt-16">
               <video
-                className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover object-center"
+                className="pointer-events-none absolute inset-x-0 -top-[10%] z-0 h-[120%] w-full object-cover object-center"
+                data-parallax="media"
                 src={ihcVideo}
                 autoPlay
                 muted
@@ -1155,6 +1267,7 @@ export default function IhcAnalysis() {
                   key={p.id}
                   id={p.id}
                   data-reveal
+                  data-parallax="panel"
                   className="relative scroll-mt-24 overflow-hidden rounded-[2rem] border border-[#EEE9F9] bg-white p-7 shadow-[0_24px_70px_-46px_rgba(76,29,149,0.45)] sm:p-10 lg:p-12"
                 >
                   <span
@@ -1167,6 +1280,7 @@ export default function IhcAnalysis() {
                       backgroundImage:
                         'radial-gradient(circle, rgba(124,58,237,0.16), transparent 70%)',
                     }}
+                    data-parallax="blob"
                     aria-hidden="true"
                   />
 

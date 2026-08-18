@@ -5,7 +5,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 import Navbar from './components/Navbar.jsx'
 import Hero from './components/Hero.jsx'
-import ClinicalWorkflow from './components/ClinicalWorkflow.jsx'
 import OmicMindBreast from './components/OmicMindBreast.jsx'
 import FoundationModel from './components/FoundationModel.jsx'
 import OmicMindCore from './components/OmicMindCore.jsx'
@@ -52,11 +51,13 @@ function App() {
 
     // 3. Seamless Section Transitions (Continuous 3D Environment)
     const ctx = gsap.context(() => {
-      // Overlap transition: Hero scales down and fades into the background
+      /* Overlap transition: Hero scales down and fades into the background.
+         It is scaled from its BOTTOM edge and given no `y` of its own, so the
+         seam with the section below never opens up — the two stay welded
+         together for the whole scrub while the depth/fade parallax plays. */
       gsap.to(heroWrapperRef.current, {
         scale: 0.9,
         opacity: 0,
-        y: -100, // moves slightly up
         ease: 'none',
         scrollTrigger: {
           trigger: suitesWrapperRef.current,
@@ -66,21 +67,10 @@ function App() {
         }
       });
 
-      // Suites section slides up smoothly over the hero
-      gsap.fromTo(suitesWrapperRef.current, 
-        { y: 100, z: 50 }, 
-        { 
-          y: 0, 
-          z: 0, 
-          ease: 'none',
-          scrollTrigger: {
-            trigger: suitesWrapperRef.current,
-            start: 'top bottom',
-            end: 'top top',
-            scrub: true,
-          }
-        }
-      );
+      /* The suites wrapper carries no transform of its own: any `y`/`z` offset
+         here reads as a transient margin-top and tears a strip of bare page
+         background between the Hero and "Modern Oncology Requires Morphology".
+         It rides normal document flow instead, directly under the Hero. */
     }, containerRef);
 
     return () => {
@@ -108,15 +98,14 @@ function App() {
       />
 
       {/* Sections wrapped for overlapping GSAP animations */}
-      <div ref={heroWrapperRef} className="relative z-10 w-full" style={{ transformOrigin: 'top center' }}>
+      <div ref={heroWrapperRef} className="relative z-10 w-full" style={{ transformOrigin: 'bottom center' }}>
         <Hero />
       </div>
 
       {/* Re-writing the Suites wrapper correctly for standard flow */}
       <div ref={suitesWrapperRef} className="relative z-20 w-full bg-[#030712] shadow-[0_-20px_50px_rgba(0,0,0,0.5)] rounded-t-[3rem]">
-        <ClinicalWorkflow />
-        <OmicMindBreast />
         <FoundationModel />
+        <OmicMindBreast />
         <OmicMindCore />
         <OmicMindEcosystem />
       </div>

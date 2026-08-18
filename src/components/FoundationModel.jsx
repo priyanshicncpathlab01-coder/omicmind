@@ -100,6 +100,90 @@ const icons = {
   ),
 };
 
+/* ================================================================
+   Card colour themes
+
+   One shade per application, sweeping the brand ramp from lavender
+   through orchid and magenta to rose and back to mauve — so the six read
+   as one family rather than six choices. Every surface stays near white
+   (alpha 0.90–0.96) to hold the text contrast; `wash` is the same ramp a
+   step richer, cross-faded in on hover.
+================================================================ */
+const themes = {
+  // 01 · Soft Lavender → Purple
+  lavender: {
+    surface:
+      'linear-gradient(155deg, rgba(243,240,255,0.94) 0%, rgba(255,255,255,0.90) 54%, rgba(237,233,254,0.94) 100%)',
+    wash:
+      'radial-gradient(115% 85% at 100% 0%, rgba(124,58,237,0.13) 0%, rgba(124,58,237,0) 62%), linear-gradient(155deg, rgba(233,227,254,0.96) 0%, rgba(250,249,255,0.93) 54%, rgba(224,216,253,0.96) 100%)',
+    edge:
+      'linear-gradient(150deg, rgba(139,92,246,0.50) 0%, rgba(196,181,253,0.26) 45%, rgba(17,24,39,0.06) 100%)',
+    glow: 'linear-gradient(135deg, rgba(124,58,237,0.34), rgba(167,139,250,0.30))',
+    shadow: '0 8px 26px -16px rgba(76,29,149,0.45)',
+    shadowHover: '0 26px 54px -18px rgba(91,33,182,0.38)',
+  },
+  // 02 · Lilac → Orchid
+  lilac: {
+    surface:
+      'linear-gradient(155deg, rgba(246,241,255,0.94) 0%, rgba(255,255,255,0.90) 54%, rgba(243,232,255,0.94) 100%)',
+    wash:
+      'radial-gradient(115% 85% at 100% 0%, rgba(168,85,247,0.13) 0%, rgba(168,85,247,0) 62%), linear-gradient(155deg, rgba(238,229,255,0.96) 0%, rgba(251,249,255,0.93) 54%, rgba(233,213,255,0.96) 100%)',
+    edge:
+      'linear-gradient(150deg, rgba(168,85,247,0.48) 0%, rgba(216,180,254,0.26) 45%, rgba(17,24,39,0.06) 100%)',
+    glow: 'linear-gradient(135deg, rgba(168,85,247,0.32), rgba(217,70,239,0.28))',
+    shadow: '0 8px 26px -16px rgba(107,33,168,0.45)',
+    shadowHover: '0 26px 54px -18px rgba(126,34,206,0.38)',
+  },
+  // 03 · Violet → Magenta
+  violet: {
+    surface:
+      'linear-gradient(155deg, rgba(244,238,255,0.94) 0%, rgba(255,255,255,0.90) 52%, rgba(250,232,255,0.94) 100%)',
+    wash:
+      'radial-gradient(115% 85% at 100% 0%, rgba(192,38,211,0.12) 0%, rgba(192,38,211,0) 62%), linear-gradient(155deg, rgba(235,225,255,0.96) 0%, rgba(252,249,255,0.93) 52%, rgba(245,214,254,0.96) 100%)',
+    edge:
+      'linear-gradient(150deg, rgba(168,85,247,0.46) 0%, rgba(232,121,249,0.28) 45%, rgba(17,24,39,0.06) 100%)',
+    glow: 'linear-gradient(135deg, rgba(168,85,247,0.30), rgba(232,121,249,0.30))',
+    shadow: '0 8px 26px -16px rgba(112,26,117,0.42)',
+    shadowHover: '0 26px 54px -18px rgba(147,51,234,0.36)',
+  },
+  // 04 · Orchid → Blush
+  orchid: {
+    surface:
+      'linear-gradient(155deg, rgba(251,238,255,0.94) 0%, rgba(255,255,255,0.90) 52%, rgba(253,236,246,0.94) 100%)',
+    wash:
+      'radial-gradient(115% 85% at 100% 0%, rgba(217,70,239,0.12) 0%, rgba(217,70,239,0) 62%), linear-gradient(155deg, rgba(248,226,255,0.96) 0%, rgba(255,250,253,0.93) 52%, rgba(252,224,241,0.96) 100%)',
+    edge:
+      'linear-gradient(150deg, rgba(217,70,239,0.42) 0%, rgba(244,114,182,0.28) 45%, rgba(17,24,39,0.06) 100%)',
+    glow: 'linear-gradient(135deg, rgba(217,70,239,0.30), rgba(244,114,182,0.30))',
+    shadow: '0 8px 26px -16px rgba(134,25,143,0.40)',
+    shadowHover: '0 26px 54px -18px rgba(192,38,211,0.34)',
+  },
+  // 05 · Blush Pink → Rose
+  blush: {
+    surface:
+      'linear-gradient(155deg, rgba(253,238,246,0.94) 0%, rgba(255,255,255,0.90) 54%, rgba(255,233,241,0.94) 100%)',
+    wash:
+      'radial-gradient(115% 85% at 100% 0%, rgba(236,72,153,0.12) 0%, rgba(236,72,153,0) 62%), linear-gradient(155deg, rgba(252,228,241,0.96) 0%, rgba(255,250,252,0.93) 54%, rgba(254,220,235,0.96) 100%)',
+    edge:
+      'linear-gradient(150deg, rgba(236,72,153,0.40) 0%, rgba(249,168,212,0.30) 45%, rgba(17,24,39,0.06) 100%)',
+    glow: 'linear-gradient(135deg, rgba(236,72,153,0.30), rgba(244,114,182,0.28))',
+    shadow: '0 8px 26px -16px rgba(157,23,77,0.38)',
+    shadowHover: '0 26px 54px -18px rgba(219,39,119,0.32)',
+  },
+  // 06 · Mauve → Violet
+  mauve: {
+    surface:
+      'linear-gradient(155deg, rgba(248,240,250,0.94) 0%, rgba(255,255,255,0.90) 52%, rgba(238,233,254,0.94) 100%)',
+    wash:
+      'radial-gradient(115% 85% at 100% 0%, rgba(147,51,234,0.12) 0%, rgba(147,51,234,0) 62%), linear-gradient(155deg, rgba(242,229,247,0.96) 0%, rgba(252,250,255,0.93) 52%, rgba(228,220,253,0.96) 100%)',
+    edge:
+      'linear-gradient(150deg, rgba(192,132,252,0.44) 0%, rgba(196,181,253,0.28) 45%, rgba(17,24,39,0.06) 100%)',
+    glow: 'linear-gradient(135deg, rgba(147,51,234,0.30), rgba(167,139,250,0.30))',
+    shadow: '0 8px 26px -16px rgba(88,28,135,0.42)',
+    shadowHover: '0 26px 54px -18px rgba(126,34,206,0.36)',
+  },
+};
+
 // Explicit desktop grid placement — written as full literal class strings so Tailwind's
 // scanner picks them up. Left column feeds the hub from the right, right column from the left.
 const applications = [
@@ -110,6 +194,7 @@ const applications = [
     icon: icons.histopathology,
     accent: '#7C3AED',
     tint: 'linear-gradient(135deg, rgba(124,58,237,0.12), rgba(168,85,247,0.08))',
+    theme: themes.lavender,
     side: 'left',
     placement: 'lg:col-start-1 lg:row-start-1',
   },
@@ -120,6 +205,7 @@ const applications = [
     icon: icons.ihc,
     accent: '#8B5CF6',
     tint: 'linear-gradient(135deg, rgba(139,92,246,0.12), rgba(168,85,247,0.08))',
+    theme: themes.lilac,
     side: 'left',
     placement: 'lg:col-start-1 lg:row-start-2',
   },
@@ -130,6 +216,7 @@ const applications = [
     icon: icons.genomics,
     accent: '#A855F7',
     tint: 'linear-gradient(135deg, rgba(168,85,247,0.12), rgba(217,70,239,0.08))',
+    theme: themes.violet,
     side: 'left',
     placement: 'lg:col-start-1 lg:row-start-3',
   },
@@ -140,6 +227,7 @@ const applications = [
     icon: icons.transcriptomics,
     accent: '#D946EF',
     tint: 'linear-gradient(135deg, rgba(217,70,239,0.12), rgba(236,72,153,0.08))',
+    theme: themes.orchid,
     side: 'right',
     placement: 'lg:col-start-3 lg:row-start-1',
   },
@@ -150,6 +238,7 @@ const applications = [
     icon: icons.spatial,
     accent: '#EC4899',
     tint: 'linear-gradient(135deg, rgba(236,72,153,0.12), rgba(244,114,182,0.08))',
+    theme: themes.blush,
     side: 'right',
     placement: 'lg:col-start-3 lg:row-start-2',
   },
@@ -160,9 +249,23 @@ const applications = [
     icon: icons.outcomes,
     accent: '#7C3AED',
     tint: 'linear-gradient(135deg, rgba(124,58,237,0.12), rgba(236,72,153,0.08))',
+    theme: themes.mauve,
     side: 'right',
     placement: 'lg:col-start-3 lg:row-start-3',
   },
+];
+
+/* Data particles scattered through the ambient field. Kept off the centre
+   column so nothing ever drifts across the hub or the connectors. */
+const PARTICLES = [
+  { x: '6%', y: '18%', s: 5, tone: '#A855F7', o: 0.5 },
+  { x: '13%', y: '46%', s: 3, tone: '#EC4899', o: 0.45 },
+  { x: '4%', y: '72%', s: 4, tone: '#7C3AED', o: 0.4 },
+  { x: '21%', y: '88%', s: 3, tone: '#D946EF', o: 0.35 },
+  { x: '94%', y: '22%', s: 4, tone: '#EC4899', o: 0.45 },
+  { x: '87%', y: '55%', s: 3, tone: '#A855F7', o: 0.4 },
+  { x: '96%', y: '78%', s: 5, tone: '#7C3AED', o: 0.35 },
+  { x: '78%', y: '10%', s: 3, tone: '#D946EF', o: 0.4 },
 ];
 
 const spokeGradient = {
@@ -226,44 +329,69 @@ function ApplicationCard({ app }) {
         aria-hidden="true"
       />
 
-      <article className="relative h-full rounded-[24px]">
-        {/* Purple/pink gradient border glow on hover */}
+      {/* The card's shade travels as custom properties, so the per-card hover
+          shadow can still be expressed as a Tailwind `group-hover:` class. */}
+      <article
+        className="relative h-full rounded-[26px]"
+        style={{
+          '--card-shadow': app.theme.shadow,
+          '--card-shadow-hover': app.theme.shadowHover,
+        }}
+      >
+        {/* Gradient border glow on hover, in the card's own shade */}
         <div
-          className="pointer-events-none absolute -inset-[3px] rounded-[26px] opacity-0 blur-[10px] transition-opacity duration-[350ms] ease-out group-hover:opacity-100"
-          style={{ backgroundImage: 'linear-gradient(135deg, rgba(124,58,237,0.35), rgba(236,72,153,0.35))' }}
+          className="pointer-events-none absolute -inset-[3px] rounded-[29px] opacity-0 blur-[12px] transition-opacity duration-[350ms] ease-out group-hover:opacity-100"
+          style={{ backgroundImage: app.theme.glow }}
           aria-hidden="true"
         />
 
-        <div className="relative flex h-full flex-col rounded-[24px] border border-gray-200 bg-white p-6 shadow-[0_2px_12px_rgba(17,24,39,0.05)] transition-all duration-[350ms] ease-out group-hover:-translate-y-1.5 group-hover:border-purple-200 group-hover:shadow-[0_22px_48px_-16px_rgba(124,58,237,0.28)] sm:p-7">
-          <div className="flex items-start justify-between gap-4">
-            <div className="app-icon-float w-fit">
-              <div
-                className="flex h-14 w-14 items-center justify-center rounded-2xl border transition-transform duration-[350ms] ease-out group-hover:scale-110"
-                style={{
-                  backgroundImage: app.tint,
-                  color: app.accent,
-                  borderColor: `${app.accent}26`,
-                }}
-              >
-                {app.icon}
+        {/* Gradient hairline: a 1px shell carrying the card's ramp, so it
+            reads as an edge-lit module at rest rather than only on hover. */}
+        <div
+          className="relative h-full rounded-[26px] p-px shadow-[var(--card-shadow)] transition-all duration-[350ms] ease-out group-hover:-translate-y-1.5 group-hover:shadow-[var(--card-shadow-hover)]"
+          style={{ backgroundImage: app.theme.edge }}
+        >
+          <div
+            className="relative flex h-full flex-col overflow-hidden rounded-[25px] p-7 backdrop-blur-xl sm:p-8"
+            style={{ backgroundImage: app.theme.surface }}
+          >
+            {/* The same ramp a step richer, cross-faded in on hover */}
+            <div
+              className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-[350ms] ease-out group-hover:opacity-100"
+              style={{ backgroundImage: app.theme.wash }}
+              aria-hidden="true"
+            />
+
+            <div className="relative flex items-start justify-between gap-4">
+              <div className="app-icon-float w-fit">
+                <div
+                  className="flex h-14 w-14 items-center justify-center rounded-2xl border shadow-[0_10px_24px_-14px_rgba(124,58,237,0.7)] transition-transform duration-[350ms] ease-out group-hover:scale-110"
+                  style={{
+                    backgroundImage: app.tint,
+                    color: app.accent,
+                    borderColor: `${app.accent}26`,
+                  }}
+                >
+                  {app.icon}
+                </div>
               </div>
+
+              <span
+                className="font-sans text-xs font-semibold tracking-[0.22em]"
+                style={{ color: `${app.accent}66` }}
+              >
+                {app.number}
+              </span>
             </div>
 
-            <span
-              className="font-sans text-xs font-semibold tracking-[0.22em]"
-              style={{ color: `${app.accent}66` }}
-            >
-              {app.number}
-            </span>
+            <h3 className="relative mt-6 font-serif text-[1.5rem] font-semibold leading-tight tracking-[-0.01em] text-[#111827]">
+              {app.title}
+            </h3>
+
+            <p className="relative mt-3 font-sans text-[14.5px] leading-relaxed text-gray-600">
+              {app.desc}
+            </p>
           </div>
-
-          <h3 className="mt-6 font-serif text-[1.45rem] font-semibold leading-tight tracking-[-0.01em] text-[#111827]">
-            {app.title}
-          </h3>
-
-          <p className="mt-3 font-sans text-[14.5px] leading-relaxed text-gray-600">
-            {app.desc}
-          </p>
         </div>
       </article>
     </li>
@@ -371,34 +499,140 @@ export default function FoundationModel() {
         yoyo: true,
         stagger: 0.3,
       });
+
+      // Orbit ring turning against the hub's own glow
+      gsap.to('.hub-ring', { rotation: -360, duration: 46, ease: 'none', repeat: -1 });
+
+      // Ambient particles, each on its own drift
+      gsap.utils.toArray('.fm-particle').forEach((particle, i) => {
+        gsap.to(particle, {
+          y: gsap.utils.random(-20, -7),
+          x: gsap.utils.random(-9, 9),
+          duration: gsap.utils.random(4, 7.5),
+          ease: 'sine.inOut',
+          repeat: -1,
+          yoyo: true,
+          delay: i * 0.18,
+        });
+      });
+
+      // Depth: the ambient layers travel at their own rates against the
+      // scroll, so the field sits behind the content rather than on it.
+      const depth = (selector, yPercent) =>
+        gsap.to(selector, {
+          yPercent,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1,
+          },
+        });
+
+      depth('.fm-wave', -9);
+      depth('.fm-particles', -16);
+      depth('.fm-grid', 5);
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
+  /* This is now the first chapter under the Hero, so the section carries the
+     rounded top edge that meets the dark wrapper, plus a full opening
+     padding — not the tighter lead-in it used when it followed another
+     white section. */
   return (
     <section
       ref={sectionRef}
-      className="relative w-full overflow-hidden bg-white pb-24 pt-10 lg:pb-32 lg:pt-16"
+      className="relative w-full overflow-hidden rounded-t-[3rem] bg-white pb-24 pt-24 lg:pb-32 lg:pt-32"
     >
-      {/* Very subtle radial brand glow */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          backgroundImage:
-            'radial-gradient(60% 45% at 50% 55%, rgba(124,58,237,0.06) 0%, rgba(236,72,153,0.04) 45%, rgba(255,255,255,0) 75%)',
-        }}
-        aria-hidden="true"
-      />
+      {/* ---------- Ambient field ----------
+          Four layers, each deliberately faint: a blueprint grid masked away
+          at the edges, two gradient waves, the original brand glow, and a
+          scatter of data particles. Everything here is decoration — it sits
+          under `z-10` content and never reaches full strength. */}
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div
+          className="fm-grid absolute inset-0"
+          style={{
+            backgroundImage:
+              'linear-gradient(to right, rgba(124,58,237,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(124,58,237,0.06) 1px, transparent 1px)',
+            backgroundSize: '64px 64px',
+            maskImage: 'radial-gradient(72% 58% at 50% 45%, #000 0%, transparent 80%)',
+            WebkitMaskImage: 'radial-gradient(72% 58% at 50% 45%, #000 0%, transparent 80%)',
+          }}
+        />
+
+        <div className="fm-wave absolute inset-0">
+          <div
+            className="absolute -left-[12%] top-[4%] h-[46%] w-[52%] rounded-full blur-[90px]"
+            style={{
+              backgroundImage:
+                'radial-gradient(circle, rgba(124,58,237,0.11) 0%, rgba(124,58,237,0) 70%)',
+            }}
+          />
+          <div
+            className="absolute -right-[10%] bottom-[2%] h-[48%] w-[50%] rounded-full blur-[100px]"
+            style={{
+              backgroundImage:
+                'radial-gradient(circle, rgba(236,72,153,0.10) 0%, rgba(236,72,153,0) 70%)',
+            }}
+          />
+        </div>
+
+        {/* Very subtle radial brand glow */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              'radial-gradient(60% 45% at 50% 55%, rgba(124,58,237,0.06) 0%, rgba(236,72,153,0.04) 45%, rgba(255,255,255,0) 75%)',
+          }}
+        />
+
+        <div className="fm-particles absolute inset-0">
+          {PARTICLES.map((p, i) => (
+            <span
+              key={`fm-particle-${i}`}
+              className="fm-particle absolute rounded-full"
+              style={{
+                left: p.x,
+                top: p.y,
+                width: p.s,
+                height: p.s,
+                opacity: p.o,
+                backgroundColor: p.tone,
+                boxShadow: `0 0 12px 2px ${p.tone}59`,
+              }}
+            />
+          ))}
+        </div>
+      </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-6">
-        <div ref={headerRef} className="mx-auto max-w-3xl text-center">
-          <h2 className="font-serif text-4xl font-semibold leading-[1.12] tracking-[-0.01em] text-[#111827] sm:text-5xl lg:text-[3.5rem]">
+        {/* Halo lifting the heading off the page — the section's focal point */}
+        <div
+          className="pointer-events-none absolute left-1/2 top-[-6%] h-[360px] w-[820px] max-w-[94vw] -translate-x-1/2 rounded-full blur-[100px]"
+          style={{
+            backgroundImage:
+              'radial-gradient(circle, rgba(168,85,247,0.16) 0%, rgba(236,72,153,0.09) 45%, rgba(255,255,255,0) 72%)',
+          }}
+          aria-hidden="true"
+        />
+
+        <div ref={headerRef} className="relative mx-auto max-w-3xl text-center">
+          <h2 className="font-serif text-[2.6rem] font-semibold leading-[1.08] tracking-[-0.015em] text-[#111827] sm:text-[3.25rem] lg:text-[3.9rem]">
             <span className="block">One AI Foundation Model.</span>
             <span className="block italic text-transparent bg-clip-text bg-gradient-to-r from-[#7C3AED] via-[#A855F7] to-[#EC4899]">
               Multiple Clinical Applications.
             </span>
           </h2>
+
+          {/* Editorial rule, echoing the one in the Hero */}
+          <span
+            className="mx-auto mt-9 block h-px w-32 rounded-full bg-gradient-to-r from-transparent via-[#A855F7] to-transparent"
+            aria-hidden="true"
+          />
 
           <p className="mx-auto mt-8 max-w-2xl font-sans text-lg font-normal leading-[1.65] tracking-[-0.005em] text-[#1F2937] sm:text-xl">
             Our Foundation Model uses{' '}
@@ -441,6 +675,17 @@ export default function FoundationModel() {
 
             <div className="relative">
               <div className="hub-node relative flex h-[260px] w-[260px] items-center justify-center rounded-full">
+                {/* Orbit rings — the hub reading as an AI node rather than a
+                    disc. Both stay inside the 340px hub column. */}
+                <div
+                  className="hub-ring pointer-events-none absolute -inset-4 rounded-full border border-dashed border-[#A855F7]/35"
+                  aria-hidden="true"
+                />
+                <div
+                  className="pointer-events-none absolute -inset-8 rounded-full border border-[#A855F7]/15"
+                  aria-hidden="true"
+                />
+
                 {/* Rotating gradient glow */}
                 <div
                   className="hub-glow pointer-events-none absolute -inset-7 rounded-full opacity-70 blur-2xl"

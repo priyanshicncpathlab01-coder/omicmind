@@ -346,30 +346,35 @@ export default function Hero() {
           minimum the full viewport height. The footage inside it runs on
           `object-cover`, so it fills any aspect ratio — ultrawide desktop
           through to a narrow phone — at its own proportions, never
-          stretched; only the edges crop, and the centre of the frame always
-          stays in view.
+          stretched; only the edges crop, and `object-position: center center`
+          keeps the centre of the frame in view on every one of them.
 
-          The footage is laid in 4% larger than the stage on every side.
-          That over-scan is what the existing parallax spends: the scroll
-          tween scales and drifts this element and the mouse pan translates
-          it by up to 20px, and without the bleed a corner pan would pull a
-          bare strip of page background into the frame. The stage clips
-          whatever those transforms push past the edge. */}
+          The over-scan the parallax spends lives on the carrier below rather
+          than on the footage itself. The carrier is laid in 4% larger than
+          the stage on every side, evenly, which leaves the footage free to
+          sit on a plain `inset-0` / 100% x 100% box — dead centre, carrying
+          no offset of its own to bias the crop toward one edge. The scroll
+          tween scales and drifts the footage and the mouse pan translates it
+          by up to 20px; the carrier's bleed absorbs that travel so a corner
+          pan never pulls a bare strip of page background into frame, and the
+          stage clips whatever the transforms push past the edge. */}
       <div
         className="absolute inset-0 z-0 h-full min-h-screen w-full overflow-hidden pointer-events-none"
         aria-hidden="true"
       >
-        <video
-          ref={videoRef}
-          src={histopathologyVideo}
-          autoPlay
-          loop
-          muted
-          playsInline
-          controls={false}
-          className="absolute left-[-4%] top-[-4%] h-[108%] w-[108%] object-cover object-center pointer-events-none"
-          style={{ transformOrigin: 'center center' }}
-        />
+        <div className="absolute left-[-4%] top-[-4%] h-[108%] w-[108%] pointer-events-none">
+          <video
+            ref={videoRef}
+            src={histopathologyVideo}
+            autoPlay
+            loop
+            muted
+            playsInline
+            controls={false}
+            className="absolute inset-0 h-full w-full object-cover pointer-events-none"
+            style={{ objectPosition: 'center center', transformOrigin: 'center center' }}
+          />
+        </div>
       </div>
 
       {/* Very subtle transparent gradient overlay for minimal blending */}
